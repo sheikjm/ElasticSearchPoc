@@ -53,4 +53,14 @@ public class Answer {
     public void setRelaltion(JoinField<String> relaltion) {
         this.relaltion = relaltion;
     }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id='" + id + '\'' +
+                ", text='" + text + '\'' +
+                ", routing='" + routing + '\'' +
+                ", relaltion=" + relaltion +
+                '}';
+    }
 }

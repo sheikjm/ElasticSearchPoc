@@ -17,6 +17,9 @@ public class Statement {
     @Field(type = FieldType.Keyword)
     private String routing;
 
+    @Field(type = FieldType.Text)
+    private String gender;
+
     @JoinTypeRelations(relations = {
             @JoinTypeRelation(parent = "statement",children = {"answer"})
     })
@@ -28,6 +31,14 @@ public class Statement {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getText() {
