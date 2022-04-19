@@ -4,10 +4,8 @@ import elastic.crud.model.Answer;
 import elastic.crud.model.Statement;
 import elastic.crud.repo.AnswerRepository;
 import elastic.crud.repo.StatementRepository;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -22,12 +20,15 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 
+
 import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.join.query.JoinQueryBuilders.hasChildQuery;
 
 @SpringBootApplication
 public class ElasticApplication implements CommandLineRunner {
+
+	//https://github.com/spring-projects/spring-data-elasticsearch/blob/416daef2f92734d0d1b5681265d719b9f1c347d5/src/test/java/org/springframework/data/elasticsearch/repositories/custom/SampleCustomMethodRepository.java
 
 	//https://docs.spring.io/spring-data/elasticsearch/docs/current/reference/html/#elasticsearch.query-methods
 
@@ -38,6 +39,11 @@ public class ElasticApplication implements CommandLineRunner {
 
 	@Autowired
 	ElasticsearchOperations elasticsearchOperations;
+
+	@Autowired
+	ElasticSearchJavaCli baseClassForEs;
+
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(ElasticApplication.class, args);
@@ -72,6 +78,8 @@ public class ElasticApplication implements CommandLineRunner {
 		hasVotes().stream().forEach(e->{
 			System.out.println(e.toString());
 		});
+
+
 		findByName().stream().forEach(e->{
 			System.out.println(e.toString());
 		});
@@ -84,6 +92,9 @@ public class ElasticApplication implements CommandLineRunner {
 		statementRepository.findAllStatement("female");
 
 		statementRepository.byParentId("answer","2");
+
+		baseClassForEs.indexDocument();
+		baseClassForEs.searchRequestExample();
 
 
 	}
@@ -146,5 +157,6 @@ public class ElasticApplication implements CommandLineRunner {
 			System.out.println(e.toString());
 		});
 	}
+
 
 }
