@@ -4,14 +4,14 @@ import org.springframework.data.elasticsearch.annotations.*;
 import org.springframework.data.elasticsearch.core.join.JoinField;
 
 @Document(indexName = "employee_index")
-@Routing("employee_routing")
+@Routing("family_routing")
 public class FamilyInfo {
 
     private String id;
     private String motherName;
     private String fatherName;
     @Field(type = FieldType.Keyword)
-    private String employee_routing;
+    private String family_routing;
     @JoinTypeRelations(relations = {
             @JoinTypeRelation(parent = "employee",children = {"family"})
     })
@@ -34,11 +34,11 @@ public class FamilyInfo {
     }
 
     public String getRouting() {
-        return employee_routing;
+        return family_routing;
     }
 
     public void setRouting(String routing) {
-        this.employee_routing = routing;
+        this.family_routing = routing;
     }
 
     public JoinField<String> getRelation() {
