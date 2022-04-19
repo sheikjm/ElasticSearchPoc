@@ -9,8 +9,10 @@ import elastic.crud.poc.pojo.FamilyInfo;
 import elastic.crud.poc.repository.EmployeeRepository;
 import elastic.crud.poc.repository.FamilyRepository;
 import org.apache.lucene.search.join.ScoreMode;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.join.query.HasChildQueryBuilder;
 import org.elasticsearch.join.query.HasParentQueryBuilder;
 import org.elasticsearch.join.query.JoinQueryBuilders;
@@ -30,6 +32,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
 @RestController()
 @RequestMapping(value = "/employee")
@@ -104,6 +108,20 @@ public class EmployeeController {
                 .build();
 
         SearchHits<Employee> employeeSearchHits= elasticsearchOperations.search(queryBuilder, Employee.class, IndexCoordinates.of("employee_index"));
+
+
+        return employeeSearchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+    }
+    @GetMapping("/getEmployeeByAgeRange")
+    public List<Employee> getEmployeeByAgeRange(){
+        QueryBuilder queryBuilder= QueryBuilders.boolQuery()
+                .must(rangeQuery("age").gt(21))
+                .must(rangeQuery("age").lte(30));
+
+        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
+                .withQuery(queryBuilder)
+                .build();
+        SearchHits<Employee> employeeSearchHits= elasticsearchOperations.search(nativeSearchQuery, Employee.class, IndexCoordinates.of("employee_index"));
 
 
         return employeeSearchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
