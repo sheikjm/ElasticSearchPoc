@@ -5,10 +5,14 @@ import elastic.crud.model.Statement;
 import elastic.crud.repo.AnswerRepository;
 import elastic.crud.repo.StatementRepository;
 import org.apache.lucene.search.join.ScoreMode;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.VersionType;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.ReindexRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -51,6 +55,8 @@ public class ElasticApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+
+		baseClassForEs.reIndexDocs();
 
 		Statement statement=new Statement();
 		statement.setId("3");
@@ -98,6 +104,8 @@ public class ElasticApplication implements CommandLineRunner {
 
 
 	}
+
+
 	SearchHits<Statement> hasVotes() {
 		NativeSearchQuery query = new NativeSearchQueryBuilder()
 				.withQuery(hasChildQuery("answer", matchAllQuery(), ScoreMode.None))

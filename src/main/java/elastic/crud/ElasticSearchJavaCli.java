@@ -12,7 +12,10 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.VersionType;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.ReindexRequest;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,5 +72,18 @@ public class ElasticSearchJavaCli {
 
         System.out.println(personList.toString());
 
+    }
+    public void reIndexDocs(){
+        ReindexRequest request = new ReindexRequest();
+        request.setSourceIndices("employee_index");
+        request.setDestIndex("emp");
+        request.setDestVersionType(VersionType.EXTERNAL);
+        try {
+            BulkByScrollResponse bulkResponse =
+                    client.reindex(request, RequestOptions.DEFAULT);
+            System.out.println(bulkResponse.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -8,6 +8,9 @@ import elastic.crud.poc.pojo.Employee;
 import elastic.crud.poc.pojo.FamilyInfo;
 import elastic.crud.poc.repository.EmployeeRepository;
 import elastic.crud.poc.repository.FamilyRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -37,6 +40,7 @@ import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
 @RestController()
 @RequestMapping(value = "/employee")
+@Slf4j
 public class EmployeeController {
 
     @Autowired
@@ -48,8 +52,13 @@ public class EmployeeController {
     @Autowired
     ElasticsearchOperations elasticsearchOperations;
 
+
+
     @PostMapping(value = "/save")
+
     public String saveEmployee(@RequestBody EmployeeRequestDto requestDto){
+
+        log.info(requestDto.getEname());
 
         Employee employee=new Employee();
         employee.setEname(requestDto.getEname());
@@ -126,4 +135,5 @@ public class EmployeeController {
 
         return employeeSearchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
     }
+
 }
