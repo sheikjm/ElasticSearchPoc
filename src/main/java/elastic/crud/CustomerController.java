@@ -20,6 +20,7 @@ public class CustomerController {
         customerRepository.saveAll(customerList);
         return customerList.size();
     }
+
     @GetMapping("/findAll")
     public Iterable<Customer> getAllCustomer(){
         return customerRepository.findAll();

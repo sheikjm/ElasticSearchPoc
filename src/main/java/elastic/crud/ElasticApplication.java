@@ -36,6 +36,8 @@ public class ElasticApplication implements CommandLineRunner {
 
 	//https://docs.spring.io/spring-data/elasticsearch/docs/current/reference/html/#elasticsearch.query-methods
 
+	//"https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-query-builders.html"
+
 	@Autowired
 	StatementRepository statementRepository;
 	@Autowired

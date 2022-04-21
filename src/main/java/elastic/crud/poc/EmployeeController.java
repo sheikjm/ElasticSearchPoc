@@ -12,10 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.join.query.HasChildQueryBuilder;
 import org.elasticsearch.join.query.HasParentQueryBuilder;
 import org.elasticsearch.join.query.JoinQueryBuilders;
@@ -134,6 +131,22 @@ public class EmployeeController {
 
 
         return employeeSearchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+    }
+    @GetMapping("/getEmployeeByExactName")
+    public Employee getEmployeeByExactName(@RequestParam String name){
+
+        TermQueryBuilder termQueryBuilder=QueryBuilders.termQuery("ename",name);
+
+        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
+                .withQuery(termQueryBuilder)
+                .build();
+
+        SearchHits<Employee> employeeSearchHits= elasticsearchOperations.search(nativeSearchQuery, Employee.class, IndexCoordinates.of("employee_index"));
+        if(employeeSearchHits.getSearchHits().size()!=0)
+        return employeeSearchHits.getSearchHit(0).getContent();
+        else
+            return new Employee();
+
     }
 
 }
